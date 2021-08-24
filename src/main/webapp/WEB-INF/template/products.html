@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0-1/css/bootstrap.min.css}"/>
+
+</head>
+<body>
+    <script th:src="@{/webjars/bootstrap/4.6.0-1/js/bootstrap.bundle.min.js}"></script>
+    <div>
+        <h1>Список товаров</h1>
+        <table class="table">
+            <tr>
+                <th>ID</th>
+                <th>Наименование</th>
+                <th>Цена</th>
+            </tr>
+            <tr th:each="product: ${products}">
+                <td th:text="${product.id}">...</td>
+                <td th:text="${product.title}">...</td>
+                <td th:text="${product.cost}">...</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
