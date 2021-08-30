@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring Lesson3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0-1/css/bootstrap.min.css}"/>
+
+</head>
+<body>
+<script th:src="@{/webjars/bootstrap/4.6.0-1/js/bootstrap.bundle.min.js}"></script>
+
+    <div>
+        <h1>Список товаров</h1>
+        <table class="table">
+            <tr>
+                <th>ID</th>
+                <th>Наименование</th>
+                <th>Цена</th>
+            </tr>
+            <tr th:each="product: ${products}">
+               <td th:text="${product.id}">...</td>
+               <td th:text="${product.title}">...</td>
+               <td th:text="${product.cost}">...</td>
+            </tr>
+        </table>
+    </div>
+
+    <form action="#" th:action="@{/product}" method="post" th:object="${product}">
+        <div class="mb-3">
+            <label class="form-label">ID</label>
+            <input type="text" class="form-control" id="id" name="id"/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Наименование</label>
+            <input type="text" class="form-control" id="title" name="title"/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Цена</label>
+            <input type="text" class="form-control" id="cost" name="cost"/>
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn-primary">Добавить</button>
+        </div>
+    </form>
+</body>
+</html>
