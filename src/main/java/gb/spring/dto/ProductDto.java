@@ -1,6 +1,8 @@
 package gb.spring.dto;
 
 import gb.spring.model.Product;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +10,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel
 public class ProductDto {
+    @ApiModelProperty
     private Long id;
     private String name;
     private Integer price;

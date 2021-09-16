@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,13 +22,16 @@ public class ProductService {
     }
 
     public void save(ProductDto productDto) {
-        if (productRepository.existsById(productDto.getId())){
-            Product mp = productRepository.getById(productDto.getId());
-            productRepository.save(productDto.updProduct(mp));
-        }else {
-            productRepository.save(productDto.mapToProduct());
-        }
+        productRepository.save(productDto.mapToProduct());
+    }
 
+    public void updateProuct(Long id, ProductDto productDto){
+        if (productRepository.existsById(id)){
+            Product updateProduct = productRepository.getById(id);
+            productRepository.save(productDto.updProduct(updateProduct));
+        }else {
+            throw new NoSuchElementException();
+        }
     }
 
     public void deleteById(Long id){

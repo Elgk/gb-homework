@@ -18,3 +18,8 @@ spring:
       enabled: true
       settings:
         web-allow-others: false
+springfox:
+  documentation:
+    swagger:
+      v2:
+        enabled: true
