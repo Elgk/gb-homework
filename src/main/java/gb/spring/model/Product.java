@@ -5,55 +5,56 @@ import javax.persistence.*;
 @Entity
 @Table(name="product")
 @NamedQueries({
-        @NamedQuery(name="Product.findAll", query="SELECT a.id, a.title, a.cost from product a order by a.title"),
-        @NamedQuery(name="Product.findById", query="SELECT a.id, a.title, a.cost from product a where a.id = :id")
+        @NamedQuery(name="Product.findAll", query="SELECT a from Product  a order by a.title"),
+        @NamedQuery(name="Product.findById", query="SELECT a from Product a where a.id = :id")
 })
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
-    private Integer id;
+    private Long id;
+
     @Column(name="title")
     private String title;
-    @Column(name="cost")
-    private Long cost;
 
-    public Integer getId() {
+    @Column(name="price")
+    private int price;
+
+    public Product(){
+    }
+
+    public Product(String title, int price) {
+        this.title = title;
+        this.price = price;
+    }
+
+    public Product(Long id, String title, int price) {
+        this.id = id;
+        this.title = title;
+        this.price = price;
+    }
+
+    public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public Long getCost() {
-        return cost;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public void setCost(Long cost) {
-        this.cost = cost;
-    }
-    public Product(){
-
+    public int getPrice() {
+        return price;
     }
 
-    public Product(String title, Long cost) {
-        this.title = title;
-        this.cost = cost;
+    public void setPrice(int price) {
+        this.price = price;
     }
-
-    public Product(Integer id, String title, Long cost) {
-        this.id = id;
-        this.title = title;
-        this.cost = cost;
-    }
-
 }

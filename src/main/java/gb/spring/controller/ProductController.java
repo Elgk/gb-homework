@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/product")
+@RequestMapping("/products")
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
@@ -16,11 +16,11 @@ public class ProductController {
     @GetMapping
     public String findAll(Model model){
         model.addAttribute("products", productService.findAll());
-        return "product";
+        return "product"; // это название страницы product.html , ее эндпоинт - /products
     }
 
     @GetMapping("/find/{id}")
-    public String findById(@PathVariable Integer id, Model model){
+    public String findById(@PathVariable Long id, Model model){
         model.addAttribute("products", productService.findById(id));
         return "product";
     }
@@ -28,13 +28,13 @@ public class ProductController {
     @PostMapping
     public String save(@ModelAttribute Product product){
         productService.save(product);
-        return "redirect:/product";
+        return "redirect:/products"; // перевод на ЭНДПОИНТ страницы product.html
     }
 
     @GetMapping("/{id}")
-    public String deleteById(@PathVariable Integer id) {
+    public String deleteById(@PathVariable Long id) {
         productService.deleteByID(id);
-        return "redirect:/product";
+        return "redirect:/products";
     }
 
 }

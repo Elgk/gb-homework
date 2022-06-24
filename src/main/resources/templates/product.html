@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Spring Lesson3</title>
+    <title>Spring Lesson 5</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0-1/css/bootstrap.min.css}"/>
 
@@ -21,12 +21,15 @@
             <tr th:each="product: ${products}">
                <td th:text="${product.id}">...</td>
                <td th:text="${product.title}">...</td>
-               <td th:text="${product.cost}">...</td>
+               <td th:text="${product.price}">...</td>
+                <td>
+                    <a  class=" btn btn-danger"  th:href="@{'/products/' + ${product.id}}"> Удалить</a>
+                </td>
             </tr>
         </table>
     </div>
 
-    <form action="#" th:action="@{/product}" method="post" th:object="${product}">
+    <form action="#" th:action="@{/products}" method="post" th:object="${product}">
         <div class="mb-3">
             <label class="form-label">ID</label>
             <input type="text" class="form-control" id="id" name="id"/>
@@ -37,10 +40,10 @@
         </div>
         <div class="mb-3">
             <label class="form-label">Цена</label>
-            <input type="text" class="form-control" id="cost" name="cost"/>
+            <input type="text" class="form-control" id="price" name="price"/>
         </div>
         <div class="mb-3">
-            <button type="submit" class="btn-primary">Добавить</button>
+            <button type="submit" class="btn-primary">Сохранить</button>
         </div>
     </form>
 </body>

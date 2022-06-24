@@ -3,65 +3,59 @@ package gb.spring.repository;
 import gb.spring.model.Product;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-public class ProductRepository {
-    private static SessionFactory factory;
-    private static Session session = null;
+public class ProductRepository implements ProductDao{
+    private final HiberConfigUtils hiberConfigUtils;
 
-    public static void init() {
-        factory = new Configuration()
-                .configure("configs/hibernate.cfg.xml")
-                .buildSessionFactory();
-        session = factory.getCurrentSession();
-    }
-    public static void shutdown(){
-        factory.close();
-        if (session != null){
-            session.close();
-        }
+
+    public ProductRepository(HiberConfigUtils hiberConfigUtils) {
+        this.hiberConfigUtils = hiberConfigUtils;
     }
 
-    public ProductRepository(){
-        init();
-    }
-
+    @Override
     public List<Product> findAll(){
-
+        Session session = hiberConfigUtils.getSession();
         session.beginTransaction();
         List<Product> productList = session.createNamedQuery("Product.findAll", Product.class).getResultList();
         session.getTransaction().commit();
         return productList.stream().collect(Collectors.toUnmodifiableList());
     }
 
-    public Optional<Product> findById(Integer id){
+    @Override
+    public Optional<Product> findById(Long id){
+        Session session = hiberConfigUtils.getSession();
         session.beginTransaction();
         Optional<Product>  product = Optional.ofNullable(session.createNamedQuery("Product.findById", Product.class)
                 .setParameter("id", id)
                 .getSingleResult());
+        session.getTransaction().commit();
         return product;
-
     }
 
+    @Override
     public void saveProduct(Product product){
+        Session session = hiberConfigUtils.getSession();
         session.beginTransaction();
-        Product newProduct = new Product(product.getTitle(), product.getCost());
-        session.save(newProduct);
+        session.saveOrUpdate(product);
+      //  Product newProduct = new Product(product.getTitle(), product.getPrice());
+      //  session.save(newProduct);
         session.getTransaction().commit();
-
     }
 
-    public void deleteByID(Integer id){
+    @Override
+    public void deleteById(Long id){
+        Session session = hiberConfigUtils.getSession();
         session.beginTransaction();
-        Product product = session.get(Product.class,id);
-        session.delete(product);
+        session.createQuery("delete from Product p where p.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
         session.getTransaction().commit();
-
     }
 }
