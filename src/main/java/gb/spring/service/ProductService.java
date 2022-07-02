@@ -17,16 +17,15 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product findById(Integer id){
-        return  productRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
-
+    public String findById(Long id){
+        return productRepository.findById(id);
     }
 
     public void save(Product product){
         productRepository.saveProduct(product);
     }
 
-    public void deleteByID(Integer id){
+    public void deleteByID(Long id){
         productRepository.deleteByID(id);
     }
 }

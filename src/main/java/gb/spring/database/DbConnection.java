@@ -1,5 +1,8 @@
 package gb.spring.database;
 
+import gb.spring.model.Customer;
+import gb.spring.model.Order;
+import gb.spring.model.Product;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,36 +11,44 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class DbConnection {
-    private static SessionFactory factory;
-    private static Session session = null;
+    private  SessionFactory factory;
 
-
-    public static Session getSession() {
-        return session;
-    }
-
-    public static SessionFactory getFactory() {
-        return factory;
+    public  Session getSession() {
+        return factory.getCurrentSession();
     }
 
     @PostConstruct
-    public static void init() {
+    public  void init() {
         factory = new Configuration()
                 .configure("configs/hibernate.cfg.xml")
+                .addAnnotatedClass(Product.class)
+                .addAnnotatedClass(Customer.class)
+                .addAnnotatedClass(Order.class)
                 .buildSessionFactory();
-        session = factory.getCurrentSession();
-        PrepareDataApp.forcePrepareData();
+        prepareData();
     }
 
     @PreDestroy
-    public static void shutdown(){
-        factory.close();
-        if (session != null){
-            session.close();
+    public  void shutdown(){
+        if (factory != null){
+            factory.close();
+        }
+    }
+    private void prepareData(){
+        try {
+            String startSql = Files.lines(Paths.get("full.sql")).collect(Collectors.joining(" "));
+            HibernateAction.executedInTransaction(this, session -> session.createNativeQuery(startSql).executeUpdate());
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

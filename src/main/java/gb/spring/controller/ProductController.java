@@ -1,5 +1,6 @@
 package gb.spring.controller;
 
+import gb.spring.model.Order;
 import gb.spring.model.Product;
 import gb.spring.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/product")
+@RequestMapping("/products")
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
@@ -19,10 +20,11 @@ public class ProductController {
         return "product";
     }
 
+    // выводит список покупателей с детализацией по заказам (один заказ - один продукт)
     @GetMapping("/find/{id}")
-    public String findById(@PathVariable Integer id, Model model){
-        model.addAttribute("products", productService.findById(id));
-        return "product";
+    @ResponseBody
+    public String findById(@PathVariable Long id, Model model){
+         return productService.findById(id);
     }
 
     @PostMapping
@@ -32,7 +34,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public String deleteById(@PathVariable Integer id) {
+    public String deleteById(@PathVariable Long id) {
         productService.deleteByID(id);
         return "redirect:/product";
     }
