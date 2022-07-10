@@ -27,13 +27,34 @@
             <td>{{p.name}}</td>
             <td>{{p.price}}</td>
             <td>
-                <input class="form-control" type="number" ng-model="p.price">
+                <input  type="number" placeholder="new price" ng-model="newPrice">
             </td>
-            <td><button class="btn btn-success" type="submit" ng_click="modifyProduct()">Изменить</button> </td>
-            <td><button class="btn-danger" ng-click="removeProduct(p.id)">Удалить</button></td>
+            <td><button class="btn btn-submit" type="submit" ng_click="changePrice(p.id, newPrice)">Изменить</button> </td>
+            <td><button class="btn btn-danger" ng-click="removeProduct(p.id)">Удалить</button></td>
         </tr>
         </tbody>
     </table>
+
+    <p></p>
+    <h3>Фильтр по цене</h3>
+    <form novalidate ng-submit="fillTable()">
+        <label>Минимальная цена</label>
+        <input class="form-control" type="number" ng-model="min">
+        <p></p>
+        <label>Максимальная цена</label>
+        <input class="form-control" type="number" ng-model="max">
+        <p></p>
+        <button class="btn btn-primary" type="submit">Применить</button>
+    </form>
+
+    <p></p>
+    <form novalidate ng-submit="fillTable()">
+         <input class="form-control" type="number" placeholder="номер страницы"  ng-model="page">
+         <p></p>
+         <button class="btn btn-primary" type="submit" >Перейти</button>
+    </form>
+    <p></p>
+
 
     <h3>Сохранить товар</h3>
     <form novalidate ng-submit="saveProduct()">

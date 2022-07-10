@@ -20,18 +20,34 @@ public class ProductService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    public List<ProductDto> findAllByPriceBetween(Integer min, Integer max){
+        return productRepository.findAllByPriceBetween(min, max).stream()
+                .map(ProductDto::valueOf)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
     public void save(ProductDto productDto) {
-        if (productRepository.existsById(productDto.getId())){
-            Product mp = productRepository.getById(productDto.getId());
-            productRepository.save(productDto.updProduct(mp));
-        }else {
-            productRepository.save(productDto.mapToProduct());
-        }
+        Product product = new Product();
+        product.setName(productDto.getName());
+        product.setPrice(productDto.getPrice());
+        product.setId(productDto.getId());
+        productRepository.save(product);
+
+//        if (productRepository.existsById(productDto.getId())){
+//            Product mp = productRepository.getById(productDto.getId());
+//            productRepository.save(productDto.updProduct(mp));
+//        }else {
+//            productRepository.save(productDto.mapToProduct());
+//        }
 
     }
 
     public void deleteById(Long id){
         productRepository.deleteById(id);
+    }
+
+    public void changePriceById(Long id, Integer price){
+        productRepository.changePriceById(id, price);
     }
 
 }

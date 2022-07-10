@@ -8,16 +8,26 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="product")
+@Table(name="products")
 @Data
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
     private Long id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "price")
     private Integer price;
+
     @CreatedDate
-    private LocalDateTime createdDateTime;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
     @LastModifiedDate
-    private LocalDateTime updatedDateTime;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }
