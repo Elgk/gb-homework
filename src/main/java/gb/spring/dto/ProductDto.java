@@ -33,9 +33,4 @@ public class ProductDto {
         return product;
     }
 
-    public Product updProduct(Product p){
-        p.setPrice(price);
-        p.setName(name);
-        return p;
-    }
 }
