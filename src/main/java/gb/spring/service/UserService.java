@@ -11,7 +11,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,11 +22,31 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUserName(username).orElseThrow( () -> new UsernameNotFoundException(String.format("User %s not found", username)));
+    public Optional<User> findByUsername(String name){
+        return userRepository.findByUsername(name);
+    }
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
+    public Optional<User> findById(Long id){
+        return userRepository.findById(id);
+    }
+
+    public int incrementScore(String username){
+        return userRepository.incrementScore(username);
+    }
+
+    public int decrementScore(String username){
+        return userRepository.decrementScore(username);
+    }
+
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = findByUsername(username)
+                      .orElseThrow( () -> new UsernameNotFoundException(String.format("User: %s not found", username)));
+
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword(),
+                mapRolesToAuthorities(user.getRoles()));
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {

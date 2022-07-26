@@ -5,13 +5,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableWebSecurity
-@Profile("dao")
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@Profile("dao")
 @RequiredArgsConstructor
 public class DaoSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserService userService;
@@ -19,11 +21,16 @@ public class DaoSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/app/**").authenticated()
-                .antMatchers("/get/current/*").authenticated()
+                .antMatchers("/score/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                .antMatchers("/user_info").authenticated()
+                .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
                 .and()
-                .formLogin();
+                .formLogin()
+                .and()
+                .logout()
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID");
     }
 
     @Bean

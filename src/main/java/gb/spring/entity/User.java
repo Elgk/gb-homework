@@ -12,19 +12,20 @@ import java.util.Collection;
 
 @Entity
 @Data
+@ToString
 @RequiredArgsConstructor
-@Table(schema = "security", name = "users")
+@Table(name = "users")
 @NamedNativeQueries(value = {
         @NamedNativeQuery(
                 name = "User.findByName",
-                query = "select * from security.users where username = ?1",
+                query = "select * from users where username = ?1",
                 resultClass = User.class),
         @NamedNativeQuery(
                 name = "User.incrementScore",
-                query = "update security.users set score = score + 1 where username = ?1 returning score"),
+                query = "update users set score = score + 1 where username = ?1 returning score"),
         @NamedNativeQuery(
                 name = "User.decrementScore",
-                query = "update security.users set score = score - 1 where username = ?1 returning score"
+                query = "update users set score = score - 1 where username = ?1 returning score"
         )
 })
 public class User {
@@ -45,11 +46,11 @@ public class User {
         @Column(name = "score")
         private int score;
 
-        @ManyToMany(fetch = FetchType.EAGER)
-        @JoinTable(schema = "security", name = "users_roles",
+        @ManyToMany
+        @JoinTable(name = "users_roles",
                 joinColumns = @JoinColumn(name = "user_id"),
                 inverseJoinColumns = @JoinColumn(name = "role_id"))
-        @ToString.Exclude
+        @ToString.Exclude // не включать атрибут  в результат выполнения object.toString, при этом должна быть аннотация @ToString на класс
         private Collection<Role> roles;
 
         @Override
